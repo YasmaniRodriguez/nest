@@ -22,8 +22,13 @@ export class CarsController {
   }
 
   @Get()
-  async getCars(@Query() filters): Promise<Car[]> {
-    return this.carsService.find(filters);
+  async getCars(@Query() filters): Promise<Record<string, unknown> | Car[]> {
+    const data = await this.carsService.find(filters);
+    if (data.length === 0) {
+      return { message: 'cars not found' };
+    } else {
+      return data;
+    }
   }
 
   @Put(':id')
@@ -33,7 +38,7 @@ export class CarsController {
   ): Promise<Record<string, unknown> | Car> {
     const data = await this.carsService.update(record, fields);
     if (data === false) {
-      return { message: 'there is not car' };
+      return { message: 'car not found' };
     } else {
       return data;
     }
@@ -45,7 +50,7 @@ export class CarsController {
   ): Promise<Record<string, unknown> | Car> {
     const data = await this.carsService.delete(record);
     if (data === false) {
-      return { message: 'there is not car' };
+      return { message: 'car not found' };
     } else {
       return data;
     }
