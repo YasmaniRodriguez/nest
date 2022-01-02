@@ -6,31 +6,33 @@ import {
   Delete,
   Body,
   Param,
-  Req,
-  Res,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
-import { carsDTO } from './dto/cars.DTO';
+import { CarsService } from './cars.service';
+import { CreateCarDto } from './dto/create-car.DTO';
+import { Car } from './interfaces/cars.interface';
+
 @Controller('cars')
 export class CarsController {
-  @Get()
-  getCars(): [] {
-    return [];
-  }
+  constructor(private readonly carsService: CarsService) {}
 
   @Post()
-  async addCars(@Body() car: carsDTO) {
-    console.log(car);
+  async addCars(@Body() createCarDto: CreateCarDto) {
+    this.carsService.create(createCarDto);
+  }
+
+  @Get()
+  async getCars(): Promise<Car[]> {
+    return this.carsService.findAll();
   }
 
   @Put(':id')
-  updateCars(@Param('id') id: string, @Body() car: carsDTO) {
+  async updateCars(@Param('id') id: string, @Body() car: CreateCarDto) {
     console.log(id);
     console.log(car);
   }
 
   @Delete(':id')
-  deleteCars(@Param('id') id: string) {
+  async deleteCars(@Param('id') id: string) {
     console.log(id);
   }
 }
