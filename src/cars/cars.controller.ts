@@ -27,12 +27,27 @@ export class CarsController {
   }
 
   @Put(':id')
-  async updateCars(@Param('id') record: string, @Body() fields): Promise<Car> {
-    return await this.carsService.update(record, fields);
+  async updateCars(
+    @Param('id') record: string,
+    @Body() fields,
+  ): Promise<Record<string, unknown> | Car> {
+    const data = await this.carsService.update(record, fields);
+    if (data === false) {
+      return { message: 'there is not car' };
+    } else {
+      return data;
+    }
   }
 
   @Delete(':id')
-  async deleteCars(@Param('id') record: string) {
-    console.log(record);
+  async deleteCars(
+    @Param('id') record: string,
+  ): Promise<Record<string, unknown> | Car> {
+    const data = await this.carsService.delete(record);
+    if (data === false) {
+      return { message: 'there is not car' };
+    } else {
+      return data;
+    }
   }
 }

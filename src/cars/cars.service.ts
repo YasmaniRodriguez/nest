@@ -28,13 +28,30 @@ export class CarsService {
   }
 
   async update(record, fields) {
-    const keys: string[] = Object.keys(fields);
+    const data = this.cars.find((row) => row.id === parseInt(record));
+    if (data === undefined) {
+      return false;
+    } else {
+      const keys: string[] = Object.keys(fields);
+      await keys.forEach((key) => {
+        data[key] = fields[key];
+      });
+
+      return data;
+    }
+  }
+
+  async delete(record) {
     const data = this.cars.find((row) => row.id === parseInt(record));
 
-    await keys.forEach((key) => {
-      data[key] = fields[key];
-    });
-
-    return data;
+    if (data === undefined) {
+      return false;
+    } else {
+      const i: number = this.cars.indexOf(data);
+      if (i !== -1) {
+        this.cars.splice(i, 1);
+      }
+      return data;
+    }
   }
 }
